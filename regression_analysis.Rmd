@@ -1,0 +1,69 @@
+---
+title: "Pooled Regression"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    code_folding: hide
+    theme: lumen #moon #lumen
+    highlight: tango #espresso
+    center: false
+    transition: fade
+    toc: true
+    number_sections: true
+    toc_depth: 4
+    toc_float: 
+      collapsed: false
+#bibliography:
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Loading required libraries
+
+```{r warning=FALSE, packages}
+#install.packages("plm")
+#library(tidyverse)
+library(plm)
+```
+
+### Reading the study dataset
+
+```{r data}
+
+hw <- read.csv("C:\\Users\\dghasemisemeskandeh\\Desktop\\Mehrgan_Malekpour\\hw.csv")
+```
+
+### Defining model formula
+
+```{r formula}
+
+myformula <- "lend ~ rgdpch_ini_hw + lini + lag(lki2_hw) + lag(lsenroll_hw) + lag(lgpop_hw)"
+```
+
+### 2.4.	Running Fixed effects model within the estimator
+
+```{r model}
+model_fit <-
+  plm(myformula,
+      data   = hw,
+      index  = c("tavawac", "period5y"), # c(group index, time index)
+      model  = "within",
+      effect = "individual") 
+```
+
+### Attaining results
+
+```{r results}
+broom::tidy(model_fit)
+```
+
+### Including Plots
+
+You can also embed plots, for example:
+
+```{r hw, echo=FALSE}
+plot(as.numeric(model_fit$residuals), hw$lend, col = "steelblue3", pch = 16, cex = .7)
+```
