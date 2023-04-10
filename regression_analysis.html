@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2023-04-10" />
+<meta name="date" content="2023-04-11" />
 
 <title>Pooled Regression</title>
 
@@ -1306,83 +1306,6 @@ window.buildTabsets = function(tocID) {
 };
 
 </script>
-<script>
-window.initializeCodeFolding = function(show) {
-
-  // handlers for show-all and hide all
-  $("#rmd-show-all-code").click(function() {
-    $('div.r-code-collapse').each(function() {
-      $(this).collapse('show');
-    });
-  });
-  $("#rmd-hide-all-code").click(function() {
-    $('div.r-code-collapse').each(function() {
-      $(this).collapse('hide');
-    });
-  });
-
-  // index for unique code element ids
-  var currentIndex = 1;
-
-  // select all R code blocks
-  var rCodeBlocks = $('pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan, pre.julia, pre.foldable');
-  rCodeBlocks.each(function() {
-    // skip if the block has fold-none class
-    if ($(this).hasClass('fold-none')) return;
-
-    // create a collapsable div to wrap the code in
-    var div = $('<div class="collapse r-code-collapse"></div>');
-    var showThis = (show || $(this).hasClass('fold-show')) && !$(this).hasClass('fold-hide');
-    var id = 'rcode-643E0F36' + currentIndex++;
-    div.attr('id', id);
-    $(this).before(div);
-    $(this).detach().appendTo(div);
-
-    // add a show code button right above
-    var showCodeText = $('<span>' + (showThis ? 'Hide' : 'Code') + '</span>');
-    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm code-folding-btn pull-right float-right"></button>');
-    showCodeButton.append(showCodeText);
-    showCodeButton
-        .attr('data-toggle', 'collapse')
-        .attr('data-bs-toggle', 'collapse') // BS5
-        .attr('data-target', '#' + id)
-        .attr('data-bs-target', '#' + id)   // BS5
-        .attr('aria-expanded', showThis)
-        .attr('aria-controls', id);
-
-    var buttonRow = $('<div class="row"></div>');
-    var buttonCol = $('<div class="col-md-12"></div>');
-
-    buttonCol.append(showCodeButton);
-    buttonRow.append(buttonCol);
-
-    div.before(buttonRow);
-
-    // show the div if necessary
-    if (showThis) div.collapse('show');
-
-    // update state of button on show/hide
-    //   * Change text
-    //   * add a class for intermediate states styling
-    div.on('hide.bs.collapse', function () {
-      showCodeText.text('Code');
-      showCodeButton.addClass('btn-collapsing');
-    });
-    div.on('hidden.bs.collapse', function () {
-      showCodeButton.removeClass('btn-collapsing');
-    });
-    div.on('show.bs.collapse', function () {
-      showCodeText.text('Hide');
-      showCodeButton.addClass('btn-expanding');
-    });
-    div.on('shown.bs.collapse', function () {
-      showCodeButton.removeClass('btn-expanding');
-    });
-
-  });
-
-}
-</script>
 
 <style type="text/css">
 code{white-space: pre-wrap;}
@@ -1466,15 +1389,6 @@ code span.st { color: #4e9a06; }
 code span.va { color: #000000; } 
 code span.vs { color: #4e9a06; } 
 code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
-.sourceCode .row {
-width: 100%;
-}
-.sourceCode {
-overflow-x: auto;
-}
-.code-folding-btn {
-margin-right: -30px;
-}
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -1586,9 +1500,6 @@ display: none;
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -1672,18 +1583,10 @@ font-size: 0.95em;
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Pooled Regression</h1>
-<h4 class="date">10 April 2023</h4>
+<h4 class="date">11 April 2023</h4>
 
 </div>
 
@@ -1703,11 +1606,11 @@ dataset</h3>
 <div id="defining-model-formula" class="section level3" number="0.0.3">
 <h3><span class="header-section-number">0.0.3</span> Defining model
 formula</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>myformula <span class="ot">&lt;-</span> <span class="st">&quot;lend ~ lini + lag(lki2_hw) + lag(lsenroll_hw) + lag(lgpop_hw)&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>myformula <span class="ot">&lt;-</span> <span class="st">&quot;lend ~ rgdpch_ini_hw + lini + lag(lki2_hw) + lag(lsenroll_hw) + lag(lgpop_hw)&quot;</span></span></code></pre></div>
 </div>
-<div id="running-model-with-dummy-variables" class="section level3" number="0.0.4">
-<h3><span class="header-section-number">0.0.4</span> Running model with
-dummy variables</h3>
+<div id="running-fixed-effects-model-within-the-estimator" class="section level3" number="0.0.4">
+<h3><span class="header-section-number">0.0.4</span> 2.4. Running Fixed
+effects model within the estimator</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model_fit <span class="ot">&lt;-</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plm</span>(myformula,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">data   =</span> hw,</span>
@@ -1719,13 +1622,14 @@ dummy variables</h3>
 <h3><span class="header-section-number">0.0.5</span> Attaining
 results</h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(model_fit)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
-##   term             estimate std.error statistic  p.value
-##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 lini               0.772     0.0270     28.6  1.26e-99
-## 2 lag(lki2_hw)       0.0393    0.0192      2.05 4.12e- 2
-## 3 lag(lsenroll_hw)  -0.0163    0.0125     -1.30 1.93e- 1
-## 4 lag(lgpop_hw)     -0.526     0.162      -3.24 1.28e- 3</code></pre>
+<pre><code>## # A tibble: 5 x 5
+##   term                estimate  std.error statistic  p.value
+##   &lt;chr&gt;                  &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 rgdpch_ini_hw     0.00000529 0.00000377      1.40 1.61e- 1
+## 2 lini              0.734      0.0382         19.2  3.82e-59
+## 3 lag(lki2_hw)      0.0441     0.0195          2.27 2.40e- 2
+## 4 lag(lsenroll_hw) -0.0156     0.0125         -1.25 2.11e- 1
+## 5 lag(lgpop_hw)    -0.510      0.162          -3.14 1.81e- 3</code></pre>
 </div>
 <div id="including-plots" class="section level3" number="0.0.6">
 <h3><span class="header-section-number">0.0.6</span> Including
@@ -1769,11 +1673,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 <script>
 $(document).ready(function ()  {
