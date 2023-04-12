@@ -9,7 +9,7 @@ output:
     center: false
     transition: fade
     toc: true
-    number_sections: true
+    #number_sections: true
     toc_depth: 4
     toc_float: 
       collapsed: false
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r warning=FALSE, packages}
 #install.packages("plm")
-#library(tidyverse)
+library(tidyverse)
 library(plm)
 ```
 
@@ -40,7 +40,7 @@ hw <- read.csv("C:\\Users\\dghasemisemeskandeh\\Desktop\\Mehrgan_Malekpour\\hw.c
 
 ```{r formula}
 
-myformula <- "lend ~ rgdpch_ini_hw + lini + lag(lki2_hw) + lag(lsenroll_hw) + lag(lgpop_hw)"
+myformula <- "lend ~ lini + lag(lki2_hw) + lag(lsenroll_hw) + lag(lgpop_hw)"
 ```
 
 ### 2.4. Running Fixed effects model within the estimator
